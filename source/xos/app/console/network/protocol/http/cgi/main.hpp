@@ -1433,6 +1433,58 @@ protected:
         field = form_.prev(i);
         return field;
     }
+    /// ...form_field_named
+    const form_field_t* first_form_field_named(const string_t& named) const {    
+        const form_field_t* field = 0;
+        const char_t* named_chars = 0;
+        if ((named_chars = named.has_chars())) {
+            field = first_form_field_named(named_chars);
+        }
+        return field;
+    }
+    const char_t* first_form_field_named_chars(const string_t& named) const {
+        size_t length = 0;
+        return first_form_field_named_chars(length, named);
+    }
+    const char_t* first_form_field_named_chars(size_t& length, const string_t& named) const {
+        const form_field_t* field = 0;
+        const char_t* chars = 0;
+        length = 0;
+        if ((field = first_form_field_named(named))) {
+            const form_field_part_t& value = field->value();
+            chars = value.has_chars(length);
+        }
+        return chars;
+    }
+    const form_field_t* first_form_field_named(const char_t* named) const {    
+        const form_field_t* field = 0;
+        form_fields_t::const_iterator_t i;
+        
+        if ((field = form_.first(i))) {
+            do {
+                const form_field_part_t& name = field->name();
+                if (!(name.compare(named))) {
+                    break;
+                }
+            } while ((field = form_.next(i)));
+        }
+        return field;
+    }
+    const char_t* first_form_field_named_chars(const char_t* named) const {
+        size_t length = 0;
+        return first_form_field_named_chars(length, named);
+    }
+    const char_t* first_form_field_named_chars(size_t& length, const char_t* named) const {
+        const form_field_t* field = 0;
+        const char_t* chars = 0;
+        length = 0;
+        if ((field = first_form_field_named(named))) {
+            const form_field_part_t& value = field->value();
+            chars = value.has_chars(length);
+        }
+        return chars;
+    }
+
 
     /// ...query_field
     const form_field_t* first_query_field(form_fields_t::const_iterator_t& i) const {    
@@ -1455,8 +1507,29 @@ protected:
         field = query_.prev(i);
         return field;
     }
-
     /// ...query_field_named
+    const form_field_t* first_query_field_named(const string_t& named) const {    
+        const form_field_t* field = 0;
+        const char_t* named_chars = 0;
+        if ((named_chars = named.has_chars())) {
+            field = first_query_field_named(named_chars);
+        }
+        return field;
+    }
+    const char_t* first_query_field_named_chars(const string_t& named) const {
+        size_t length = 0;
+        return first_query_field_named_chars(length, named);
+    }
+    const char_t* first_query_field_named_chars(size_t& length, const string_t& named) const {
+        const form_field_t* field = 0;
+        const char_t* chars = 0;
+        length = 0;
+        if ((field = first_query_field_named(named))) {
+            const form_field_part_t& value = field->value();
+            chars = value.has_chars(length);
+        }
+        return chars;
+    }
     const form_field_t* first_query_field_named(const char_t* named) const {    
         const form_field_t* field = 0;
         form_fields_t::const_iterator_t i;
@@ -1482,6 +1555,20 @@ protected:
         if ((field = first_query_field_named(named))) {
             const form_field_part_t& value = field->value();
             chars = value.has_chars(length);
+        }
+        return chars;
+    }
+
+    /// ...query_or_form_field...
+    const char_t* first_query_or_form_field_named_chars(const string_t& named) const {
+        size_t length = 0;
+        return first_query_or_form_field_named_chars(length, named);
+    }
+    const char_t* first_query_or_form_field_named_chars(size_t& length, const string_t& named) const {
+        const char_t* chars = 0;
+        if (!(chars = first_query_field_named_chars(length, named))) {
+            if (!(chars = first_form_field_named_chars(length, named))) {
+            }
         }
         return chars;
     }
